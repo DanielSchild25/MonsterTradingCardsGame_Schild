@@ -22,7 +22,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
 
         public readonly Dictionary<string, string> headers = new();
 
-        public CONTENT_TYPE contentType
+        public CONTENT_TYPE ContentType
         {
             set
             {
@@ -30,7 +30,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
             }
         }
 
-        public int contentLength
+        public int ContentLength
         {
             set
             {
@@ -38,13 +38,13 @@ namespace MonsterTradingCardsGame.Server.HTTP
             }
         }
 
-        public string body { get; private set; } = "";
+        public string Body { get; private set; } = "";
 
         public Dictionary<string, object> message
         {
             set
             {
-                body = JsonConvert.SerializeObject(value);
+                Body = JsonConvert.SerializeObject(value);
             }
         }
 
@@ -53,16 +53,24 @@ namespace MonsterTradingCardsGame.Server.HTTP
         public HttpResponse(StreamWriter streamW)
         {
             streamWriter = streamW;
-            contentType = CONTENT_TYPE.JSON;
+            ContentType = CONTENT_TYPE.JSON;
+            Send();
+        }
+
+        public void Send(STATUS status, Dictionary<string, object> message)
+        {
+            this.status = status;
+            this.message = message;
             Send();
         }
 
         public void Send()
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(body);
-            contentLength = buffer.Length;
+            byte[] buffer = Encoding.UTF8.GetBytes(Body);
+            ContentLength = buffer.Length;
+
             string[] words = status.ToString().ToLower().Split("_");
-            
+
             for(int i = 0; i < words.Length; i++)
             {
                 words[i] = words[i][0].ToString().ToUpper() + words[i].Substring(1);
@@ -81,7 +89,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
             }
 
             streamWriter.WriteLine();
-            streamWriter.WriteLine(body);
+            streamWriter.WriteLine(Body);
             streamWriter.Close();
         }
 

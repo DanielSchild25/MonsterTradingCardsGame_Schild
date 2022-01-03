@@ -31,13 +31,13 @@ namespace MonsterTradingCardsGame.Server.HTTP
         }
        
 
-        public int contentLenght
+        public int ContentLenght
         {
             get
             {
                 if (!headers.ContainsKey("content-lenght")) return -1;
                 if (!int.TryParse(this["content-length"], out int lenght)) return -2;
-                if (lenght < 0) return -1;
+                if (lenght < 0) return -2;
                 if (lenght > 1024) return -3;
                 return lenght;
             }

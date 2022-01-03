@@ -20,7 +20,7 @@ namespace MonsterTradingCardsGame.Server
 
         async Task Handle(HttpRequest request, HttpResponse response)
         {
-            response.contentType = HttpResponse.CONTENT_TYPE.JSON;
+            response.ContentType = HttpResponse.CONTENT_TYPE.JSON;
             if(request.route == "" || !handler.ContainsKey(request.method) || !handler[request.method].ContainsKey(request.route))
             {
                 response.status = HttpResponse.STATUS.NOT_FOUND;
@@ -53,8 +53,8 @@ namespace MonsterTradingCardsGame.Server
         void RegisterHandlers()
         {
             RegisterHandler<Handlers.POST.Users>(HttpRequest.METHOD.POST, "users");
-            RegisterHandler<Handlers.POST.Session>(HttpRequest.METHOD.POST, "sessions");
-            RegisterHandler<Handlers.POST.Package>(HttpRequest.METHOD.POST, "packages");
+            RegisterHandler<Handlers.POST.Sessions>(HttpRequest.METHOD.POST, "sessions");
+            RegisterHandler<Handlers.POST.Packages>(HttpRequest.METHOD.POST, "packages");
         }
     }
 }

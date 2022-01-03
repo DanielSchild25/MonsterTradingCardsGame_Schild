@@ -22,7 +22,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
         public Users(HttpResponse response, HttpRequest request) : base(response, request)
         {
             var streamreader = request.streamReader;
-            char[] buffer =  new char[request.contentLenght];
+            char[] buffer =  new char[request.ContentLenght];
             
             for(int i = 0; i < buffer.Length; i++)
             {
