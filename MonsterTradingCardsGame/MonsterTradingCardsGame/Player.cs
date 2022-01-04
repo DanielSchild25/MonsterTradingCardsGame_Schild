@@ -3,18 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Npgsql;
 
 namespace MonsterTradingCardsGame
 {
     class Player
     {
-        private int coins;
-        private object cards;
-        private object deck;
-        private int elo;
-        private object sessionStart;
-        private string token;
-        private object sessions[];
+        public readonly string username;
+        string bio;
+        string image;
+        List<Card> cards;
+        List<Card> deck;
+        uint coins;
+        uint elo;
+        DateTime sessionStart;
+        public readonly string token;
+
+        static Dictionary<string, Player> sessions = new();
+
+        public static Player? GetSession(string token)
+        {
+            if (!sessions.ContainsKey(token)) return null;
+            return sessions[token];
+        }
 
         Player (string username)
         {
@@ -22,7 +33,7 @@ namespace MonsterTradingCardsGame
             cards = new();
             deck = new();
             elo = 1000;
-            sessionStart = DataTime.Now;
+            sessionStart = DateTime.Now;
             token = Guid.NewGuid().ToString();
             sessions[token] = this;
 
