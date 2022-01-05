@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MonsterTradingCardsGame.Cards;
 using Npgsql;
 
 namespace MonsterTradingCardsGame
@@ -12,14 +13,14 @@ namespace MonsterTradingCardsGame
         public readonly string username;
         string bio;
         string image;
-        List<Card> cards;
-        List<Card> deck;
+        List<Card> stack;
+        public List<Card> deck;
         uint coins;
         uint elo;
         DateTime sessionStart;
         public readonly string token;
 
-        static Dictionary<string, Player> sessions = new();
+        static Dictionary<string, Player> sessions = new ();
 
         public static Player? GetSession(string token)
         {
@@ -27,10 +28,10 @@ namespace MonsterTradingCardsGame
             return sessions[token];
         }
 
-        Player (string username)
+        public Player (string username)
         {
             coins = 20;
-            cards = new();
+            stack = new ();
             deck = new();
             elo = 1000;
             sessionStart = DateTime.Now;
