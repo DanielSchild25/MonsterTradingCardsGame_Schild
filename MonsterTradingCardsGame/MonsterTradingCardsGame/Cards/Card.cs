@@ -7,20 +7,27 @@ using System.Threading.Tasks;
 namespace MonsterTradingCardsGame.Cards
 {
     public enum ElementType { Fire, Water, Normal }
+
+    public enum CardType { Monster, Spell }
+
+    public enum CardGroup { Goblin, Dragon, Wizzard, Orks, Knights, Kraken, FireElves, Normal }
     class Card
     {
-        
+
         public string name;
         public float damage;
-        public ElementType type;
+        public ElementType Etype;
         public string id;
         public int package;
+        public CardType Ctype;
+        public CardGroup Group;
 
-        public Card(string name, float damage, ElementType type)
+        public Card(string name, float damage, ElementType type, CardGroup group)
         {
             this.name = name;
             this.damage = damage;
-            this.type = type;
+            this.Etype = type;
+            this.Group = group;
         }
 
         /*public async Task<Card?> Create(string id, string name, float damage, int package = -1)
