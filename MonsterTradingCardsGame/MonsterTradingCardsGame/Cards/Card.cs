@@ -22,25 +22,64 @@ namespace MonsterTradingCardsGame.Cards
         public CardType Ctype;
         public CardGroup Group;
 
-        public Card(string name, float damage, ElementType type, CardGroup group)
+        public Card(string id,string name, float damage, ElementType Etype, CardType Ctype, CardGroup group)
         {
+            this.id = id;
             this.name = name;
             this.damage = damage;
-            this.Etype = type;
+            this.Etype = Etype;
             this.Group = group;
+            this.Ctype = Ctype;
+            //this.package = package;
         }
 
-        /*public async Task<Card?> Create(string id, string name, float damage, int package = -1)
+        public async static Task<Card?> Create(string id, string name, float damage, ElementType EType, CardType CType, CardGroup Group, int package = -1)
         {
-            Card card = Build(id, name, damage);
+            Card card = Build(id, name, damage, EType, CType, Group);
             card.package = package;
-            Dictionary<string, object> data = new() { { "id", id }, { "name", name }, { "damage", damage } };
+            Dictionary<string, object> data = new() { { "id", id }, { "name", name }, { "damage", damage }, { "elementtype", EType }, { "cardtype", CType }, { "gruppe", Group } };
             if (package >= 0)
                 data["package"] = package;
             bool success = await Database.self.Write("card", data);
             if (!success)
                 return null;
             return card;
+        }
+
+        private  static Card Build(string id, string name, float damage, ElementType EType, CardType CType, CardGroup Group)
+        {
+            Card card = new(id, name, damage, EType, CType, Group);
+
+            return card;
+        }
+
+        public static async Task<int> GetPackageID()
+        {
+            var data = await Database.self.Read("MAX(package)", "card");
+            return data == null ? 0 : data["max"] is System.DBNull ? 0 : (int)data["max"] + 1;
+        }
+
+        public static async Task<Card[]?> BuyPackage()
+        {
+            var result = await Database.self.Read("package", "card", new() { { "username", "" } }/*, "RANDOM ()"*/);
+            if (result == null)
+                return null;
+            return null;
+        }
+
+        /*private static void RegisterCard<T>(string name) where T : Card
+        {
+            if (cards.ContainKey(name))
+                return;
+
+            cards[name] = (string id, string name, float damage) =>
+            {
+                Card? card = (T?)Activator.CreateInstance(typeof(T), new object[] { id, name, damage });
+                if (card == null)
+                    throw new NullReferenceException("Something went wrong, unable to create card!");
+                return card;
+            };
+
         }*/
     }
 }

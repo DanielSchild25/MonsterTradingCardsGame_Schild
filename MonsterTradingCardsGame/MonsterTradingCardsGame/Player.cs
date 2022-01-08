@@ -47,25 +47,22 @@ namespace MonsterTradingCardsGame
 
         Player(Dictionary<string, object> data)
         {
+            username = (string)data["username"];
             coins = (uint)data["coins"];
             elo = (uint)data["elo"];
-            bio = (string)data["bio"];
-            image = (string)data["image"];
         }
 
         public async static Task<Player?> Login(string username, string password)
         {
-            var user = await Database.self.Read("*", "player", new() { { "username", username } });
-            if(user == null || !Password.Check(password, (string)user["password"]))
-            {
+            var user = await Database.self.Read("*", "users", new() { { "username", username } });
+            if(user == null || (password != (string)user["passhash"]))
                 return null;
-            }
             return new Player(username);
         }
 
         public static async Task<Player?> Register(string username, string password)
         {
-            bool success = await Database.self.Write("player", new() { { "username", username }, { "password", password.GetHashCode(password) } });
+            bool success = await Database.self.Write("users", new() { { "username", username }, { "passhash", password } });
 
             if (!success) return null;
 

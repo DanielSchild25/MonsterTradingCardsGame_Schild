@@ -14,7 +14,7 @@ namespace MonsterTradingCardsGame.Server
         public async Task Start()
         {
             RegisterHandlers();
-            HttpListener http = new("127.0.0.1", 1001, Handle);
+            HttpListener http = new("127.0.0.1", 10001, Handle);
             await http.Start();
         }
 
@@ -41,7 +41,7 @@ namespace MonsterTradingCardsGame.Server
 
             handler[method][$"/{route.ToLower()}/"] = (request, response) =>
             {
-                Handler handle = (T?)Activator.CreateInstance(typeof(T), new object[] { request, response });
+                Handler handle = (T?)Activator.CreateInstance(typeof(T), new object[] { response, request });
                 if (handle == null)
                 {
                     throw new NullReferenceException("Something went wrong, unable to create handler");

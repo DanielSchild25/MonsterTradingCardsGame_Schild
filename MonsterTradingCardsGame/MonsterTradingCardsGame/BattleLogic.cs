@@ -17,15 +17,15 @@ namespace MonsterTradingCardsGame
             Player Player1 = new("user1");
             Player Player2 = new("user2");
 
-            MonsterCard Monster1 = new("Monster1", 1, ElementType.Normal, CardGroup.Dragon);
-            MonsterCard Monster2 = new("Monster2", 2, ElementType.Water, CardGroup.FireElves);
-            MonsterCard Monster3 = new("Monster3", 3, ElementType.Fire, CardGroup.Goblin);
-            MonsterCard Monster4 = new("Monster4", 4, ElementType.Normal, CardGroup.Knights);
-            SpellCard Spell1 = new("Spell1", 1, ElementType.Normal, CardGroup.Kraken);
-            SpellCard Spell2 = new("Spell2", 2, ElementType.Fire, CardGroup.Orks);
-            SpellCard Spell3 = new("Spell3", 3, ElementType.Normal, CardGroup.Wizzard);
-            SpellCard Spell4 = new("Spell4", 4, ElementType.Water, CardGroup.Normal);
-
+            MonsterCard Monster1 = new("1", "Monster1", 1, ElementType.Normal, CardType.Monster, CardGroup.Dragon);
+            MonsterCard Monster2 = new("2", "Monster2", 2, ElementType.Water, CardType.Monster, CardGroup.FireElves);
+            MonsterCard Monster3 = new("3", "Monster3", 3, ElementType.Fire, CardType.Monster, CardGroup.Goblin);
+            MonsterCard Monster4 = new("4", "Monster4", 4, ElementType.Normal, CardType.Monster, CardGroup.Knights);
+            SpellCard Spell1 = new("5", "Spell1", 1, ElementType.Normal, CardType.Spell, CardGroup.Kraken);
+            SpellCard Spell2 = new("6", "Spell2", 2, ElementType.Fire, CardType.Spell, CardGroup.Orks);
+            SpellCard Spell3 = new("7", "Spell3", 3, ElementType.Normal, CardType.Spell, CardGroup.Wizzard);
+            SpellCard Spell4 = new("8", "Spell4", 4, ElementType.Water, CardType.Spell, CardGroup.Normal);
+            
             List<Card> P1 = new()
             {
                 Monster1,

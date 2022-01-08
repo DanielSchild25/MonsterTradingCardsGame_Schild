@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MonsterTradingCardsGame.Cards;
 
 namespace MonsterTradingCardsGame.Server.Handlers.POST
 {
@@ -15,6 +16,9 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             public string Id;
             public string Name;
             public float Damage;
+            public ElementType EType;
+            public CardType CType;
+            public CardGroup Group;
         }
 
         RequestPackages[] reqPackages;
@@ -22,7 +26,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
         public Packages(HttpResponse response ,HttpRequest request) : base(response, request)
         {
             var sr = request.streamReader;
-            char[] buffer = new char[request.ContentLenght];
+            char[] buffer = new char[request.ContentLength];
             for(int i = 0; i < buffer.Length; i++)
             {
                 buffer[i] = (char)sr.Read();
@@ -42,10 +46,10 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
                 return;
             }
 
-            int index = await Cards.Card.GetPackageIndex();
+            int index = await Cards.Card.GetPackageID();
             foreach(RequestPackages package in reqPackages)
             {
-                await Cards.Card.Create(package.Id, package.Name, package.Damage, index);
+                await Cards.Card.Create(package.Id, package.Name, package.Damage, package.EType, package.CType, package.Group, index);
             }
         }
     }

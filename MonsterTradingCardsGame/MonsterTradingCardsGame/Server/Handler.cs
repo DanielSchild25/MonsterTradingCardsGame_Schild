@@ -19,9 +19,9 @@ namespace MonsterTradingCardsGame.Server
             this.request = request;
             this.response = response;
             
-            if(request.headers.ContainsKey("Authorization"))
+            if(request.headers.ContainsKey("authorization"))
             {
-                string[] split = request.headers["Authorization"].Split("");
+                string[] split = request.headers["authorization"].Split("");
                 if(split.Length == 2)
                 {
                     token = split[1];

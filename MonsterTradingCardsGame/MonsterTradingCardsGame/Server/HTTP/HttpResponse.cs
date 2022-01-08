@@ -54,7 +54,6 @@ namespace MonsterTradingCardsGame.Server.HTTP
         {
             streamWriter = streamW;
             ContentType = CONTENT_TYPE.JSON;
-            Send();
         }
 
         public void Send(STATUS status, Dictionary<string, object> message)

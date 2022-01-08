@@ -21,7 +21,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
         public Sessions(HttpResponse response, HttpRequest request) : base(response, request)
         {
             var sr = request.streamReader;
-            char[] buffer = new char[request.ContentLenght];
+            char[] buffer = new char[request.ContentLength];
 
             for(int i = 0; i < buffer.Length; i++)
             {

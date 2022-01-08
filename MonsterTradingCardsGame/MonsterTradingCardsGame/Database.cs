@@ -27,11 +27,22 @@ namespace MonsterTradingCardsGame
             }
         }
 
-        Database(string host = "localhost", string user = "dev", string password = "12345", string database = "mtcg")
+        /*public Database()
         {
-            var db = new NpgsqlConnection($"Host={host};Username={user};Password={password};Database={database}");
+            var db = new NpgsqlConnection("Server=127.0.0.1; Username=postgres; Password=; Database=mtcg;");
             db.Open();
             this.db = db;
+        }*/
+
+        Database(string host = "localhost", string user = "postgres", string password = "", string database = "mtcg")
+        {
+            var db = new NpgsqlConnection($"Host={host}; Username={user};Password={password};Database={database}");
+
+            db.Open();
+            this.db = db;
+            Console.WriteLine("Connect successful!");
+            
+            
         }
 
         public async Task<Data?> Read(string scope, string table, Data? parameters = null)
@@ -74,7 +85,7 @@ namespace MonsterTradingCardsGame
                 {
                     result[reader.GetName(i)] = reader.GetValue(i);
                 }
-            }
+            };
             return result;
         }
 
