@@ -30,7 +30,6 @@ namespace MonsterTradingCardsGame.Cards
             this.Etype = Etype;
             this.Group = group;
             this.Ctype = Ctype;
-            //this.package = package;
         }
 
         public async static Task<Card?> Create(string id, string name, float damage, ElementType EType, CardType CType, CardGroup Group, int package = -1)

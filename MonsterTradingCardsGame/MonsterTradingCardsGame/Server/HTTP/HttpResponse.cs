@@ -12,25 +12,26 @@ namespace MonsterTradingCardsGame.Server.HTTP
     internal class HttpResponse
     {
         public enum STATUS { OK = 200, CREATED = 201, NO_CONTENT = 204, BAD_REQUEST = 400, UNAUTHORIZED = 401, FORBIDDEN = 403, NOT_FOUND = 404, CONFLICT = 409, LENGHT_REQUIRED = 411, PAYLOAD_TOO_LARGE = 413 }
-        public enum CONTENT_TYPE { JSON }
-        public readonly Dictionary<CONTENT_TYPE, string> CONTENT_TYPE_VALUES = new()
+        public enum TYPE { JSON }
+        public STATUS status;
+        public readonly Dictionary<TYPE, string> TypeValues = new()
         {
-            { CONTENT_TYPE.JSON, "application/json" },
+            { TYPE.JSON, "application/json" },
         };
 
-        public readonly StreamWriter streamWriter;
+        public readonly StreamWriter Writer;
 
         public readonly Dictionary<string, string> headers = new();
 
-        public CONTENT_TYPE ContentType
+        public TYPE Type
         {
             set
             {
-                headers["Content-Type"] = CONTENT_TYPE_VALUES[value];
+                headers["Content-Type"] = TypeValues[value];
             }
         }
 
-        public int ContentLength
+        public int Length
         {
             set
             {
@@ -40,7 +41,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
 
         public string Body { get; private set; } = "";
 
-        public Dictionary<string, object> message
+        public Dictionary<string, object> Message
         {
             set
             {
@@ -48,48 +49,38 @@ namespace MonsterTradingCardsGame.Server.HTTP
             }
         }
 
-        public STATUS status;
-
-        public HttpResponse(StreamWriter streamW)
+        public HttpResponse(StreamWriter Writer)
         {
-            streamWriter = streamW;
-            ContentType = CONTENT_TYPE.JSON;
+            this.Writer = Writer;
+            Type = TYPE.JSON;
         }
 
-        public void Send(STATUS status, Dictionary<string, object> message)
+        public void Send(STATUS status, Dictionary<string, object> mes)
         {
             this.status = status;
-            this.message = message;
+            this.Message = mes;
             Send();
         }
 
         public void Send()
         {
             byte[] buffer = Encoding.UTF8.GetBytes(Body);
-            ContentLength = buffer.Length;
+            Length = buffer.Length;
 
-            string[] words = status.ToString().ToLower().Split("_");
+            string[] terms = status.ToString().ToLower().Split("_");
 
-            for(int i = 0; i < words.Length; i++)
-            {
-                words[i] = words[i][0].ToString().ToUpper() + words[i].Substring(1);
-            }
-
+            for(int i = 0; i < terms.Length; i++)
+                terms[i] = terms[i][0].ToString().ToUpper() + terms[i].Substring(1);
             if(status == STATUS.OK)
-            {
-                words[0] = "OK";
-            }
-
-            streamWriter.WriteLine($"HTTP/1.1 {(int)status} {string.Join(" ", words)}");
+                terms[0] = "OK";
+            Writer.WriteLine($"HTTP/1.1 {(int)status} {string.Join(" ", terms)}");
 
             foreach (string key in headers.Keys)
-            {
-                streamWriter.WriteLine($"{key}: {headers[key]}");
-            }
+                Writer.WriteLine($"{key}: {headers[key]}");
 
-            streamWriter.WriteLine();
-            streamWriter.WriteLine(Body);
-            streamWriter.Close();
+            Writer.WriteLine();
+            Writer.WriteLine(Body);
+            Writer.Close();
         }
 
     }

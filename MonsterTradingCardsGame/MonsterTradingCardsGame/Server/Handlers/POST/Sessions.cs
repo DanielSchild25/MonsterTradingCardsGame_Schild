@@ -20,7 +20,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
 
         public Sessions(HttpResponse response, HttpRequest request) : base(response, request)
         {
-            var sr = request.streamReader;
+            var sr = request.Reader;
             char[] buffer = new char[request.ContentLength];
 
             for(int i = 0; i < buffer.Length; i++)
@@ -39,12 +39,12 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             if(player == null)
             {
                 response.status = HttpResponse.STATUS.UNAUTHORIZED;
-                response.message = new() { { "status", (int)HttpResponse.STATUS.UNAUTHORIZED }, { "error", "No player is matching username and password!" } };
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.UNAUTHORIZED }, { "error", "No player is matching username and password!" } };
                 return;
             }
 
             response.status = HttpResponse.STATUS.OK;
-            response.message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "User logged in successfully!" }, { "token", player.token } };
+            response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "User logged in successfully!" }, { "token", player.token } };
         }
     }
 }

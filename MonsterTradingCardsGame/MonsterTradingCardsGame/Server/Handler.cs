@@ -36,7 +36,7 @@ namespace MonsterTradingCardsGame.Server
             Player? player = Player.GetSession(token);
             if (player != null) return player;
             response.status = HttpResponse.STATUS.UNAUTHORIZED;
-            response.message = new() { { "status", (int)HttpResponse.STATUS.UNAUTHORIZED }, { "error", "Not Authorized!" } };
+            response.Message = new() { { "status", (int)HttpResponse.STATUS.UNAUTHORIZED }, { "error", "Not Authorized!" } };
             return null;
 
         }

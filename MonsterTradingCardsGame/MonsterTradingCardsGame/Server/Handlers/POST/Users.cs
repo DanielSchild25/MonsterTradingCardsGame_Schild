@@ -21,7 +21,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
 
         public Users(HttpResponse response, HttpRequest request) : base(response, request)
         {
-            var streamreader = request.streamReader;
+            var streamreader = request.Reader;
             char[] buffer =  new char[request.ContentLength];
             
             for(int i = 0; i < buffer.Length; i++)
@@ -39,12 +39,12 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             if(player == null)
             {
                 response.status = HttpResponse.STATUS.CONFLICT;
-                response.message = new() { { "status", (int)HttpResponse.STATUS.CONFLICT }, { "error", "Username already used!" } };
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.CONFLICT }, { "error", "Username already used!" } };
                 return;
             }
 
             response.status = HttpResponse.STATUS.CREATED;
-            response.message = new() { { "status", (int)HttpResponse.STATUS.CREATED }, { "message", "User successfully created!" }, { "token", player.token} };
+            response.Message = new() { { "status", (int)HttpResponse.STATUS.CREATED }, { "message", "User successfully created!" }, { "token", player.token} };
 
         }
     }

@@ -10,42 +10,42 @@ namespace MonsterTradingCardsGame.Server.HTTP
 {
     class HttpListener
     {
-        TcpListener server;
+        TcpListener TcpServer;
         private Func<HttpRequest, HttpResponse, Task> callback;
-        StreamReader streamReader;
-        StreamWriter streamWriter;
+        StreamReader Reader;
+        StreamWriter Writer;
 
         public HttpListener(string ip, int port, Func<HttpRequest, HttpResponse, Task> callback)
         {
-            server = new TcpListener(IPAddress.Parse(ip), port);
+            TcpServer = new TcpListener(IPAddress.Parse(ip), port);
             this.callback = callback;
         }
 
         public async Task Start()
         {
-            server.Start();
+            TcpServer.Start();
             while(true)
             {
                 Console.WriteLine("Waiting for Connection...");
-                var client = server.AcceptTcpClient();
+                var client = TcpServer.AcceptTcpClient();
                 Console.WriteLine("New Client connected");
                 using var stream = client.GetStream();
-                streamReader = new StreamReader(stream);
-                streamWriter = new StreamWriter(stream);
-                var request = new HttpRequest(streamReader);
-                var response = new HttpResponse(streamWriter);
+                Reader = new StreamReader(stream);
+                Writer = new StreamWriter(stream);
+                var request = new HttpRequest(Reader);
+                var response = new HttpResponse(Writer);
 
-                if(request.route == "" || request.ContentLength == -2)
+                if(request.HttpRoute == "" || request.ContentLength == -1)
                 {
                     response.Send(HttpResponse.STATUS.BAD_REQUEST, new() { { "status", (int)HttpResponse.STATUS.BAD_REQUEST }, { "error", "Bad Request" } });
                     continue;
                 }
-                if (request.ContentLength == -3)
+                if (request.ContentLength == -2)
                 {
                     response.Send(HttpResponse.STATUS.PAYLOAD_TOO_LARGE, new() { { "status", (int)HttpResponse.STATUS.PAYLOAD_TOO_LARGE }, { "error", "Your payload is too large" } });
                     continue;
                 }
-                if (request.ContentLength == -1)
+                if (request.ContentLength == -3)
                 {
                     response.Send(HttpResponse.STATUS.LENGHT_REQUIRED, new() { { "status", (int)HttpResponse.STATUS.LENGHT_REQUIRED }, { "error", "Content-Length header is missing" } });
                     continue;
@@ -57,7 +57,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
                 Console.WriteLine();
 
             };
-            server.Stop();
+            TcpServer.Stop();
         }
 
     }
