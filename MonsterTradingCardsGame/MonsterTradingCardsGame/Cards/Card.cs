@@ -39,7 +39,7 @@ namespace MonsterTradingCardsGame.Cards
             Dictionary<string, object> data = new() { { "id", id }, { "name", name }, { "damage", damage }, { "elementtype", EType }, { "cardtype", CType }, { "gruppe", Group } };
             if (package >= 0)
                 data["package"] = package;
-            bool success = await Database.self.Write("card", data);
+            bool success = await Database.Base.Write("card", data);
             if (!success)
                 return null;
             return card;
@@ -54,13 +54,13 @@ namespace MonsterTradingCardsGame.Cards
 
         public static async Task<int> GetPackageID()
         {
-            var data = await Database.self.Read("MAX(package)", "card");
+            var data = await Database.Base.Read("MAX(package)", "card");
             return data == null ? 0 : data["max"] is System.DBNull ? 0 : (int)data["max"] + 1;
         }
 
         public static async Task<Card[]?> BuyPackage()
         {
-            var result = await Database.self.Read("package", "card", new() { { "username", "" } }/*, "RANDOM ()"*/);
+            var result = await Database.Base.Read("package", "card", new() { { "username", "" } }/*, "RANDOM ()"*/);
             if (result == null)
                 return null;
             return null;

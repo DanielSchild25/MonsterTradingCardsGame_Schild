@@ -52,8 +52,8 @@ namespace MonsterTradingCardsGame.Server
 
         void RegisterHandlers()
         {
-            RegisterHandler<Handlers.POST.Users>(HttpRequest.METHODS.POST, "users");
-            RegisterHandler<Handlers.POST.Sessions>(HttpRequest.METHODS.POST, "sessions");
+            RegisterHandler<Handlers.POST.Register>(HttpRequest.METHODS.POST, "users");
+            RegisterHandler<Handlers.POST.Login>(HttpRequest.METHODS.POST, "sessions");
             RegisterHandler<Handlers.POST.Packages>(HttpRequest.METHODS.POST, "packages");
         }
     }

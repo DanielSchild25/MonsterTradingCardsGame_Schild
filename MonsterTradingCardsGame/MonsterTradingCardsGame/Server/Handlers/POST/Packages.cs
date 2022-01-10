@@ -11,7 +11,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
 {
     internal class Packages : Handler
     {
-        struct RequestPackages
+        struct PackageRequest
         {
             public string Id;
             public string Name;
@@ -21,33 +21,34 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             public CardGroup Group;
         }
 
-        RequestPackages[] reqPackages;
+        PackageRequest[] requestedPackages;
 
         public Packages(HttpResponse response ,HttpRequest request) : base(response, request)
         {
-            var sr = request.Reader;
+            var reader = request.Reader;
             char[] buffer = new char[request.ContentLength];
             for(int i = 0; i < buffer.Length; i++)
             {
-                buffer[i] = (char)sr.Read();
+                buffer[i] = (char)reader.Read();
             }
-            string sbuffer = string.Join("", buffer);
-            reqPackages = JsonConvert.DeserializeObject<RequestPackages[]>(sbuffer)!;
+            string streamBuffer = string.Join("", buffer);
+            requestedPackages = JsonConvert.DeserializeObject<PackageRequest[]>(streamBuffer)!;
         }
 
         public async override Task Handle()
         {
-            Player? player = Authentication();
-            if (player == null) return;
-            if(player.username != "admin")
+            User? user = Authentication();
+            if (user == null)
+                return;
+            if(user.username != "admin")
             {
                 response.status = HttpResponse.STATUS.FORBIDDEN;
-                response.Message = new() { { "status", (int)HttpResponse.STATUS.FORBIDDEN }, { "message", "Only the admin is authorized to create packages!" } };
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.FORBIDDEN }, { "message", "Only Admins can create Packages!" } };
                 return;
             }
 
             int index = await Cards.Card.GetPackageID();
-            foreach(RequestPackages package in reqPackages)
+            foreach(PackageRequest package in requestedPackages)
             {
                 await Cards.Card.Create(package.Id, package.Name, package.Damage, package.EType, package.CType, package.Group, index);
             }

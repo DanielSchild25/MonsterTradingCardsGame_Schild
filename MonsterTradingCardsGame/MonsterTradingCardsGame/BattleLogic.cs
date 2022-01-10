@@ -14,8 +14,8 @@ namespace MonsterTradingCardsGame
             int round = 1;
             int LastIndex1 = 3;
             int LastIndex2 = 3;
-            Player Player1 = new("user1");
-            Player Player2 = new("user2");
+            User Player1 = new("user1");
+            User Player2 = new("user2");
 
             MonsterCard Monster1 = new("1", "Monster1", 1, ElementType.Normal, CardType.Monster, CardGroup.Dragon);
             MonsterCard Monster2 = new("2", "Monster2", 2, ElementType.Water, CardType.Monster, CardGroup.FireElves);

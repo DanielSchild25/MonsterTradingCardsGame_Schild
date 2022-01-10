@@ -21,20 +21,20 @@ namespace MonsterTradingCardsGame.Server
             
             if(request.headers.ContainsKey("authorization"))
             {
-                string[] split = request.headers["authorization"].Split("");
-                if(split.Length == 2)
+                string[] part = request.headers["authorization"].Split("");
+                if(part.Length == 2)
                 {
-                    token = split[1];
+                    token = part[1];
                 }
             }
         }
 
         public abstract Task Handle();
 
-        public Player? Authentication()
+        public User? Authentication()
         {
-            Player? player = Player.GetSession(token);
-            if (player != null) return player;
+            User? user = User.GetUserToken(token);
+            if (user != null) return user;
             response.status = HttpResponse.STATUS.UNAUTHORIZED;
             response.Message = new() { { "status", (int)HttpResponse.STATUS.UNAUTHORIZED }, { "error", "Not Authorized!" } };
             return null;

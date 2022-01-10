@@ -8,14 +8,14 @@ using Npgsql;
 namespace MonsterTradingCardsGame
 {
 
-    using Data = Dictionary<string, object>;
+    using Dict = Dictionary<string, object>;
     class Database
     {
 
         readonly NpgsqlConnection db;
         static Database? instance;
         
-        public static Database self
+        public static Database Base
         {
             get
             {
@@ -35,42 +35,40 @@ namespace MonsterTradingCardsGame
             db.Open();
             this.db = db;
             Console.WriteLine("Connect successful!");
-            
-            
         }
 
-        public async Task<Data?> Read(string scope, string table, Data? parameters = null)
+        public async Task<Dict?> Read(string toRead, string table, Dict? restrictions = null)
         {
-            Data result = new();
-            string scommand = $"SELECT {scope} FROM {table} ";
+            Dict result = new();
+            string stringCommand = $"SELECT {toRead} FROM {table} ";
 
-            if(parameters != null)
+            if(restrictions != null)
             {
-                string[] keys = parameters.Keys.ToArray();
+                string[] keys = restrictions.Keys.ToArray();
 
                 for(int i = 0; i < keys.Length; i++)
                 {
                     keys[i] = $"{keys[i]}=@{keys[i]}";
                 }
 
-                if(parameters.Count > 0)
+                if(restrictions.Count > 0)
                 {
-                    scommand += "WHERE " + string.Join(" AND ", keys);
+                    stringCommand += "WHERE " + string.Join(" AND ", keys);
                 }
             }
 
-            using var command = new NpgsqlCommand(scommand + ";");
-            command.Connection = db;
+            using var sqlCommand = new NpgsqlCommand(stringCommand + ";");
+            sqlCommand.Connection = db;
 
-            if(parameters != null)
+            if(restrictions != null)
             {
-                foreach(string key in parameters.Keys)
+                foreach(string key in restrictions.Keys)
                 {
-                    command.Parameters.AddWithValue(key, parameters[key]);
+                    sqlCommand.Parameters.AddWithValue(key, restrictions[key]);
                 }
             }
 
-            await using (var reader = await command.ExecuteReaderAsync())
+            await using (var reader = await sqlCommand.ExecuteReaderAsync())
             {
                 if (!reader.HasRows) return null;
                 reader.Read();
@@ -83,23 +81,23 @@ namespace MonsterTradingCardsGame
             return result;
         }
 
-        public async Task<bool> Write(string table, Data parameters)
+        public async Task<bool> Write(string table, Dict data)
         {
-            if (parameters.Count == 0) return false;
+            if (data.Count == 0) return false;
 
-            string scommand = $"INSERT INTO {table} ({string.Join(", ", parameters.Keys)}) VALUES (@{string.Join(", @", parameters.Keys)});";
-            using var command = new NpgsqlCommand(scommand);
-            command.Connection = db;
+            string stringCommand = $"INSERT INTO {table} ({string.Join(", ", data.Keys)}) VALUES (@{string.Join(", @", data.Keys)});";
+            using var sqlCommand = new NpgsqlCommand(stringCommand);
+            sqlCommand.Connection = db;
 
-            foreach(string key in parameters.Keys)
+            foreach(string key in data.Keys)
             {
-                command.Parameters.AddWithValue(key, parameters[key]);
+                sqlCommand.Parameters.AddWithValue(key, data[key]);
             }
 
             try
             {
-                await command.ExecuteNonQueryAsync();
-                Console.WriteLine(scommand);
+                await sqlCommand.ExecuteNonQueryAsync();
+                Console.WriteLine(stringCommand);
             }
             catch (System.Data.Common.DbException ex)
             {
