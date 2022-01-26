@@ -16,9 +16,9 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             public string Id;
             public string Name;
             public float Damage;
-            public ElementType EType;
+            /*public ElementType EType;
             public CardType CType;
-            public CardGroup Group;
+            public CardGroup Group;*/
         }
 
         PackageRequest[] requestedPackages;
@@ -50,7 +50,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             int index = await Cards.Card.GetPackageID();
             foreach(PackageRequest package in requestedPackages)
             {
-                await Cards.Card.Create(package.Id, package.Name, package.Damage, package.EType, package.CType, package.Group, index);
+                await Cards.Card.Create(package.Id, package.Name, package.Damage, index);
             }
         }
     }

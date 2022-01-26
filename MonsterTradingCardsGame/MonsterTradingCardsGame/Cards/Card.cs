@@ -16,27 +16,22 @@ namespace MonsterTradingCardsGame.Cards
 
         public string name;
         public float damage;
-        public ElementType Etype;
         public string id;
         public int package;
-        public CardType Ctype;
-        public CardGroup Group;
 
-        public Card(string id,string name, float damage, ElementType Etype, CardType Ctype, CardGroup group)
+        public Card(string id,string name, float damage)
         {
             this.id = id;
             this.name = name;
             this.damage = damage;
-            this.Etype = Etype;
-            this.Group = group;
-            this.Ctype = Ctype;
+
         }
 
-        public async static Task<Card?> Create(string id, string name, float damage, ElementType EType, CardType CType, CardGroup Group, int package = -1)
+        public async static Task<Card?> Create(string id, string name, float damage, int package = -1)
         {
-            Card card = Build(id, name, damage, EType, CType, Group);
+            Card card = Build(id, name, damage);
             card.package = package;
-            Dictionary<string, object> data = new() { { "id", id }, { "name", name }, { "damage", damage }, { "elementtype", EType }, { "cardtype", CType }, { "gruppe", Group } };
+            Dictionary<string, object> data = new() { { "id", id }, { "name", name }, { "damage", damage } };
             if (package >= 0)
                 data["package"] = package;
             bool success = await Database.Base.Write("card", data);
@@ -45,9 +40,9 @@ namespace MonsterTradingCardsGame.Cards
             return card;
         }
 
-        private  static Card Build(string id, string name, float damage, ElementType EType, CardType CType, CardGroup Group)
+        private  static Card Build(string id, string name, float damage)
         {
-            Card card = new(id, name, damage, EType, CType, Group);
+            Card card = new(id, name, damage);
 
             return card;
         }
