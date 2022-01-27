@@ -52,6 +52,9 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             {
                 await Cards.Card.Create(package.Id, package.Name, package.Damage, index);
             }
+
+            response.status = HttpResponse.STATUS.OK;
+            response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Package successfully created!" }};
         }
     }
 }
