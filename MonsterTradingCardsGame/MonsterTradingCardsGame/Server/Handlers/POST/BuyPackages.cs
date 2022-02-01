@@ -33,6 +33,12 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
 
         public async override Task Handle()
         {
+            User? user = Authentication();
+            if (user == null)
+                return;
+            await Cards.Card.BuyPackage(user.username);
+            response.status = HttpResponse.STATUS.OK;
+            response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Package successfully bought!" } };
 
         }
     }

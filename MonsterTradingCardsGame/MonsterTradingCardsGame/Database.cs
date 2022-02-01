@@ -37,19 +37,30 @@ namespace MonsterTradingCardsGame
             Console.WriteLine("Connect successful!");
         }
 
-        public async Task<Dict?> Read(string toRead, string table, Dict? restrictions = null)
+        public async Task<Dict?> Read(string toRead, string table, Dict? restrictions = null, bool random = false)
         {
             Dict result = new();
             string stringCommand = $"SELECT {toRead} FROM {table} ";
-
-            if(restrictions != null)
+            
+            if (restrictions != null)
             {
                 string[] keys = restrictions.Keys.ToArray();
 
-                for(int i = 0; i < keys.Length; i++)
+                if(restrictions.ContainsValue("NULL"))
                 {
-                    keys[i] = $"{keys[i]}=@{keys[i]}";
+                    for (int i = 0; i < keys.Length; i++)
+                    {
+                        keys[i] = $"{keys[i]} is NULL";
+                    }
                 }
+                else
+                {
+                    for(int i = 0; i < keys.Length; i++)
+                    {
+                        keys[i] = $"{keys[i]}=@{keys[i]}";
+                    }
+                }
+                
 
                 if(restrictions.Count > 0)
                 {
@@ -57,7 +68,10 @@ namespace MonsterTradingCardsGame
                 }
             }
 
-            using var sqlCommand = new NpgsqlCommand(stringCommand + ";");
+            if (random)
+                stringCommand += " ORDER BY RANDOM() LIMIT 1";
+
+                using var sqlCommand = new NpgsqlCommand(stringCommand + ";");
             sqlCommand.Connection = db;
 
             if(restrictions != null)
@@ -81,9 +95,56 @@ namespace MonsterTradingCardsGame
             return result;
         }
 
+        public async Task<bool> Update(string table, Dict data, Dict restrictions)
+        {
+            if (data.Count == 0) 
+                return false;
+
+            string stringCommand = $"UPDATE {table} SET {data.Keys.First()}=@{data.Keys.First()} ";
+
+            string[] keys = restrictions.Keys.ToArray();
+
+            for (int i = 0; i < keys.Length; i++)
+            {
+                keys[i] = $"{keys[i]}=@{keys[i]}";
+            }
+
+            if (restrictions.Count > 0)
+            {
+                stringCommand += "WHERE " + string.Join(" AND ", keys);
+            }
+
+            using var sqlCommand = new NpgsqlCommand(stringCommand + ";");
+            sqlCommand.Connection = db;
+
+            foreach (string key in restrictions.Keys)
+            {
+                sqlCommand.Parameters.AddWithValue(key, restrictions[key]);
+            }
+
+            foreach (string key in data.Keys)
+            {
+                sqlCommand.Parameters.AddWithValue(key, data[key]);
+            }
+
+            try
+            {
+                await sqlCommand.ExecuteNonQueryAsync();
+                Console.WriteLine(stringCommand);
+            }
+            catch (System.Data.Common.DbException ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+
         public async Task<bool> Write(string table, Dict data)
         {
-            if (data.Count == 0) return false;
+            if (data.Count == 0) 
+                return false;
 
             string stringCommand = $"INSERT INTO {table} ({string.Join(", ", data.Keys)}) VALUES (@{string.Join(", @", data.Keys)});";
             using var sqlCommand = new NpgsqlCommand(stringCommand);

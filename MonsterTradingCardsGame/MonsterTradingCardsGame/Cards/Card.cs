@@ -53,12 +53,17 @@ namespace MonsterTradingCardsGame.Cards
             return data == null ? 0 : data["max"] is System.DBNull ? 0 : (int)data["max"] + 1;
         }
 
-        public static async Task<Card[]?> BuyPackage()
+        public static async Task<Card[]?> BuyPackage(string username)
         {
-            var result = await Database.Base.Read("packageid", "cards", new() { { "username", "" } }/*, "RANDOM ()"*/);
+            var result = await Database.Base.Read("packageid", "cards", new() { { "username", "NULL" } }, true);
             if (result == null)
                 return null;
+            var packageid = result["packageid"];
+            bool success = await Database.Base.Update("cards", new() { { "username", username } }, new() { { "packageid", packageid } });
+            if (!success)
+                return null;
             return null;
+            
         }
 
         /*private static void RegisterCard<T>(string name) where T : Card
