@@ -36,9 +36,23 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             User? user = Authentication();
             if (user == null)
                 return;
-            await Cards.Card.BuyPackage(user.username);
-            response.status = HttpResponse.STATUS.OK;
-            response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Package successfully bought!" } };
+            int result = await Cards.Card.BuyPackage(user.username);
+            switch(result)
+            {
+                case 0:
+                    response.status = HttpResponse.STATUS.OK;
+                    response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Package successfully bought!" } };
+                    break;
+                case -1:
+                    response.status = HttpResponse.STATUS.CONFLICT;
+                    response.Message = new() { { "status", (int)HttpResponse.STATUS.CONFLICT }, { "error", "Something went wrong, pls try again!" } };
+                    break;
+                case -2:
+                    response.status = HttpResponse.STATUS.CONFLICT;
+                    response.Message = new() { { "status", (int)HttpResponse.STATUS.CONFLICT }, { "error", "User doesn't have enough coins!" } };
+                    break;
+            }
+            
 
         }
     }

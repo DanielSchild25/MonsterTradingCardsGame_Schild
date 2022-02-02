@@ -66,7 +66,7 @@ namespace MonsterTradingCardsGame
 
         public static async Task<User?> Register(string username, string password)
         {
-            bool success = await Database.Base.Write("users", new() { { "username", username }, { "password", password } });
+            bool success = await Database.Base.Write("users", new() { { "username", username }, { "password", password } ,{ "coins", 20 } });
             if (!success)
                 return null;
             return new User(username);
