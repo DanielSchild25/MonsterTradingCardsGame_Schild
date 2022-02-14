@@ -47,6 +47,11 @@ namespace MonsterTradingCardsGame.Server.HTTP
             {
                 Body = JsonConvert.SerializeObject(value);
             }
+
+            get
+            {
+                return Message;
+            }
         }
 
         public HttpResponse(StreamWriter Writer)

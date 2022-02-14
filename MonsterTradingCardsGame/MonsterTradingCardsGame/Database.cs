@@ -85,12 +85,18 @@ namespace MonsterTradingCardsGame
             await using (var reader = await sqlCommand.ExecuteReaderAsync())
             {
                 if (!reader.HasRows) return null;
-                reader.Read();
 
-                for(int i = 0; i < reader.FieldCount; i++)
+                int index = 0;
+                while(reader.Read())
                 {
-                    result[reader.GetName(i)] = reader.GetValue(i);
+                    for(int i = 0;  i < reader.FieldCount; i++)
+                    {
+                        result[reader.GetName(i) + index] = reader.GetValue(i);
+         
+                    }
+                    index++;
                 }
+
             }
             return result;
         }

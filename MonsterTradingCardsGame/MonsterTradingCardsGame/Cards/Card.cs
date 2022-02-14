@@ -50,7 +50,7 @@ namespace MonsterTradingCardsGame.Cards
         public static async Task<int> GetPackageID()
         {
             var data = await Database.Base.Read("MAX(packageid)", "cards");
-            return data == null ? 0 : data["max"] is System.DBNull ? 0 : (int)data["max"] + 1;
+            return data == null ? 0 : data["max0"] is System.DBNull ? 0 : (int)data["max0"] + 1;
         }
 
         public static async Task<int> BuyPackage(string username)
@@ -58,14 +58,14 @@ namespace MonsterTradingCardsGame.Cards
             var result = await Database.Base.Read("coins", "users", new() { { "username", username } });
             if (result == null)
                 return -1;
-            var coins = result["coins"];
+            var coins = result["coins0"];
             if ((int)coins < 5)
                 return -2;
             
             result = await Database.Base.Read("packageid", "cards", new() { { "username", "NULL" } }, true);
             if (result == null)
                 return -1;
-            var packageid = result["packageid"];
+            var packageid = result["packageid0"];
             bool success = await Database.Base.Update("cards", new() { { "username", username } }, new() { { "packageid", packageid } });
             if (!success)
                 return -1;
@@ -77,6 +77,12 @@ namespace MonsterTradingCardsGame.Cards
 
             return 0;
             
+        }
+
+        public static async Task<Dictionary<string, object>> GetCardsId(string username)
+        {
+            var result = await Database.Base.Read("id", "cards", new() { { "username", username } });
+            return result;
         }
 
         /*private static void RegisterCard<T>(string name) where T : Card

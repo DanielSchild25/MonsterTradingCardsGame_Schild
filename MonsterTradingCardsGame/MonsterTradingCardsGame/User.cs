@@ -59,7 +59,7 @@ namespace MonsterTradingCardsGame
         public async static Task<User?> Login(string username, string password)
         {
             var user = await Database.Base.Read("*", "users", new() { { "username", username } });
-            if(user == null || (password != (string)user["password"]))
+            if(user == null || (password != (string)user["password0"]))
                 return null;
             return new User(username);
         }
