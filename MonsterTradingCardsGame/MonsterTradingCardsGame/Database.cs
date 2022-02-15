@@ -106,7 +106,17 @@ namespace MonsterTradingCardsGame
             if (data.Count == 0) 
                 return false;
 
-            string stringCommand = $"UPDATE {table} SET {data.Keys.First()}=@{data.Keys.First()} ";
+            //string stringCommand = $"UPDATE {table} SET {data.Keys.First()}=@{data.Keys.First()} ";
+            string stringCommand = $"UPDATE {table} SET ";
+
+            string[] parts = data.Keys.ToArray();
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                parts[i] = $"{parts[i]}=@{parts[i]}";
+            }
+
+            stringCommand += string.Join(", ", parts);
 
             string[] keys = restrictions.Keys.ToArray();
 
@@ -117,7 +127,7 @@ namespace MonsterTradingCardsGame
 
             if (restrictions.Count > 0)
             {
-                stringCommand += "WHERE " + string.Join(" AND ", keys);
+                stringCommand += " WHERE " + string.Join(" AND ", keys);
             }
 
             using var sqlCommand = new NpgsqlCommand(stringCommand + ";");

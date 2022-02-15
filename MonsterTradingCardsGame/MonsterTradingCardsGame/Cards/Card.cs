@@ -85,6 +85,30 @@ namespace MonsterTradingCardsGame.Cards
             return result;
         }
 
+        public static async Task<Dictionary<string, object>> ShowDeck(string username)
+        {
+            var result = await Database.Base.Read("*", "decks", new() { { "username", username } });
+            return result;
+        }
+
+        public static async Task<bool> CreateDeck(string username, string card1, string card2, string card3, string card4)
+        {
+            Dictionary<string, object> data = new() { { "username", username }, { "card1", card1 }, { "card2", card2 }, { "card3", card3 }, { "card4", card4 } };
+            bool success = await Database.Base.Write("decks", data);
+            if (!success)
+                return false;
+            return true;
+        }
+
+        public static async Task<bool> EditDeck(string username, string card1, string card2, string card3, string card4)
+        {
+            Dictionary<string, object> data = new() { { "card1", card1 }, { "card2", card2 }, { "card3", card3 }, { "card4", card4 } };
+            bool success = await Database.Base.Update("decks",  data, new() { { "username", username } });
+            if (!success)
+                return false;
+            return true;
+        }
+
         /*private static void RegisterCard<T>(string name) where T : Card
         {
             if (cards.ContainKey(name))

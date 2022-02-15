@@ -35,7 +35,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
                 var request = new HttpRequest(Reader);
                 var response = new HttpResponse(Writer);
 
-                if(request.HttpMethod == HttpRequest.METHODS.POST)
+                if(request.HttpMethod != HttpRequest.METHODS.GET )
                 {
                     if(request.HttpRoute == "" || request.ContentLength == -1)
                     {
