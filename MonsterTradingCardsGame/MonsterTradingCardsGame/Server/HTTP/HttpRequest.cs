@@ -10,6 +10,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
         public readonly METHODS HttpMethod;
         public readonly string HttpVersion = "";
         public readonly string HttpRoute = "";
+        public readonly string RequestedUser = "";
         public readonly StreamReader Reader;
         public readonly Dictionary<string, string> headers = new();
 
@@ -49,6 +50,12 @@ namespace MonsterTradingCardsGame.Server.HTTP
                 return;
             this.HttpMethod = (METHODS)method;
             HttpRoute = part[1];
+            if(HttpRoute.Contains("users") && this.HttpMethod != METHODS.POST)
+            {
+                string[] RouteParts = HttpRoute.Split("/");
+                HttpRoute = "/" + RouteParts[1];
+                this.RequestedUser = RouteParts[2];
+            }
             if (!HttpRoute.EndsWith("/")) 
                 HttpRoute += "/";
             HttpVersion = part[2];

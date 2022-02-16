@@ -29,28 +29,47 @@ namespace MonsterTradingCardsGame.Server.Handlers.PUT
             }
             string streamBuffer = string.Join("", buffer);
             string[] parts = streamBuffer.Split('\"');
-            requestedCards.Id1 = parts[1];
-            requestedCards.Id2 = parts[3];
-            requestedCards.Id3 = parts[5];
-            requestedCards.Id4 = parts[7];
+
+            if(parts.Length <= 7)
+            {
+                requestedCards.Id1 = null;
+            }
+            else
+            {
+                requestedCards.Id1 = parts[1];
+                requestedCards.Id2 = parts[3];
+                requestedCards.Id3 = parts[5];
+                requestedCards.Id4 = parts[7];
+            }
+            
         }
         public async override Task Handle()
         {
             User? user = Authentication();
             if (user == null)
                 return;
+            if(requestedCards.Id1 != null)
+            {
+                var success = await Cards.Card.EditDeck(user.username, requestedCards.Id1, requestedCards.Id2, requestedCards.Id3, requestedCards.Id4);
 
-            var success = await Cards.Card.EditDeck(user.username, requestedCards.Id1, requestedCards.Id2, requestedCards.Id3, requestedCards.Id4);
+                if (!success)
+                {
+                    response.status = HttpResponse.STATUS.CONFLICT;
+                    response.Message = new() { { "status", (int)HttpResponse.STATUS.CONFLICT }, { "error", "Something went wrong, pls try again!" } };
+                    return;
+                }
 
-            if (!success)
+                response.status = HttpResponse.STATUS.OK;
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Deck successfully configured!" } };
+            }
+            else
             {
                 response.status = HttpResponse.STATUS.CONFLICT;
-                response.Message = new() { { "status", (int)HttpResponse.STATUS.CONFLICT }, { "error", "Something went wrong, pls try again!" } };
-                return;
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.CONFLICT }, { "error", "Not enough cards!" } };
             }
+            
 
-            response.status = HttpResponse.STATUS.OK;
-            response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Deck successfully configured!" } };
+            
 
         }
     }

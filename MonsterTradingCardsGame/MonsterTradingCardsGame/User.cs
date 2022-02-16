@@ -71,5 +71,19 @@ namespace MonsterTradingCardsGame
                 return null;
             return new User(username);
         }
+
+        public static async Task<Dictionary<string, object>> ShowUserData(string username)
+        {
+            Dictionary<string, object> result = await Database.Base.Read("*", "users", new() { { "username", username } });
+
+            return result;
+        }
+
+        public static async Task<bool> EditUserData(string username, string name, string bio, string image)
+        {
+            bool success = await Database.Base.Update("users", new() { { "name", name}, { "bio", bio}, { "image", image} }, new() { { "username", username }});
+
+            return success;
+        }
     }
 }
