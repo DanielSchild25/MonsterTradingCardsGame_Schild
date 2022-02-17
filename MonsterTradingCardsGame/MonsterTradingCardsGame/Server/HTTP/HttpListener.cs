@@ -35,7 +35,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
                 var request = new HttpRequest(Reader);
                 var response = new HttpResponse(Writer);
 
-                if(request.HttpMethod != HttpRequest.METHODS.GET )
+                /*if(request.HttpMethod != HttpRequest.METHODS.GET )
                 {
                     if(request.HttpRoute == "" || request.ContentLength == -1)
                     {
@@ -52,7 +52,7 @@ namespace MonsterTradingCardsGame.Server.HTTP
                         response.Send(HttpResponse.STATUS.LENGHT_REQUIRED, new() { { "status", (int)HttpResponse.STATUS.LENGHT_REQUIRED }, { "error", "Content-Length header is missing" } });
                         continue;
                     }
-                }
+                }*/
                 
                 await callback(request, response);
                 Console.WriteLine(response.status.ToString());

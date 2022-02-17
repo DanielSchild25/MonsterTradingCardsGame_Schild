@@ -61,6 +61,7 @@ namespace MonsterTradingCardsGame.Server
             RegisterHandler<Handlers.PUT.EditDeck>(HttpRequest.METHODS.PUT, "deck");
             RegisterHandler<Handlers.GET.Users>(HttpRequest.METHODS.GET, "users");
             RegisterHandler<Handlers.PUT.Users>(HttpRequest.METHODS.PUT, "users");
+            RegisterHandler<Handlers.POST.Battles>(HttpRequest.METHODS.POST, "battles");
         }
     }
 }

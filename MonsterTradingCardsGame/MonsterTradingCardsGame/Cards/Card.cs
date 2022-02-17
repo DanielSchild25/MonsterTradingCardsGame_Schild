@@ -18,6 +18,9 @@ namespace MonsterTradingCardsGame.Cards
         public float damage;
         public string id;
         public int package;
+        public ElementType EType;
+        public CardType CType;
+        public CardGroup CGroup;
 
         public Card(string id,string name, float damage)
         {

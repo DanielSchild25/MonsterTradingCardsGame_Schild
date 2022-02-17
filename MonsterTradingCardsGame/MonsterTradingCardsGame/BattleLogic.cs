@@ -9,11 +9,90 @@ namespace MonsterTradingCardsGame
 {
     class BattleLogic
     {
-        public void Battle()
+        public static async Task<string> Battle(string player1, string player2)
         {
             int round = 1;
             int LastIndex1 = 3;
             int LastIndex2 = 3;
+
+            Dictionary<string, object> P1Ids;
+            Dictionary<string, object> P2Ids;
+            Dictionary<string, object> result;
+            Card[] CardArray = new Card[10];
+
+            P1Ids = await Database.Base.Read("*", "decks", new() { { "username", player1 } });
+            P2Ids = await Database.Base.Read("*", "decks", new() { { "username", player2 } });
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P1Ids["card10"] } });
+            Card P1Card1 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P1Card1);
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P1Ids["card20"] } });
+            Card P1Card2 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P1Card2);
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P1Ids["card30"] } });
+            Card P1Card3 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P1Card3);
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P1Ids["card40"] } });
+            Card P1Card4 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P1Card4);
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P2Ids["card10"] } });
+            Card P2Card1 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P2Card1);
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P2Ids["card20"] } });
+            Card P2Card2 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P2Card2);
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P2Ids["card30"] } });
+            Card P2Card3 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P2Card3);
+
+            result = await Database.Base.Read("*", "cards", new() { { "id", P2Ids["card40"] } });
+            Card P2Card4 = new((string)result["id0"], (string)result["name0"], (int)result["damage0"]);
+            CardArray.Append(P2Card4);
+
+            foreach(Card C in CardArray)
+            {
+                if (C.name.Contains("Fire"))
+                    C.EType = ElementType.Fire;
+                else if (C.name.Contains("Water"))
+                    C.EType = ElementType.Water;
+                else
+                    C.EType = ElementType.Normal;
+
+                if (C.name.Contains("Spell"))
+                    C.CType = CardType.Spell;
+                else
+                    C.CType = CardType.Monster;
+
+                if (C.name.Contains("Goblin"))
+                    C.CGroup = CardGroup.Goblin;
+                else if (C.name.Contains("Dragon"))
+                    C.CGroup = CardGroup.Dragon;
+                else if (C.name.Contains("Wizzard"))
+                    C.CGroup = CardGroup.Wizzard;
+                else if (C.name.Contains("Ork"))
+                    C.CGroup = CardGroup.Orks;
+                else if (C.name.Contains("Knight"))
+                    C.CGroup = CardGroup.Knights;
+                else if (C.name.Contains("Kraken"))
+                    C.CGroup = CardGroup.Kraken;
+                else if (C.name.Contains("FireElf"))
+                    C.CGroup = CardGroup.FireElves;
+                else
+                    C.CGroup = CardGroup.Normal;
+            }
+
+
+
+
+
+
+
             User Player1 = new("user1");
             User Player2 = new("user2");
 
@@ -150,19 +229,19 @@ namespace MonsterTradingCardsGame
                 if (LastIndex1 < 0)
                 {
                     Console.WriteLine("Player 2 Wins! Match END!");
-                    return;
+                    return "Player 2 Wins! Match END!";
                 }
 
                 if (LastIndex2 < 0)
                 {
                     Console.WriteLine("Player 1 Wins! Match END!");
-                    return;
+                    return "Player 1 Wins! Match END!";
                 }
 
                 if (round > 100)
                 {
                     Console.WriteLine("Round Limit reached! Match END!");
-                    return;
+                    return "Round Limit reached! Match END!";
                 }
 
 
