@@ -106,6 +106,18 @@ namespace MonsterTradingCardsGame.Cards
         public static async Task<bool> EditDeck(string username, string card1, string card2, string card3, string card4)
         {
             Dictionary<string, object> data = new() { { "card1", card1 }, { "card2", card2 }, { "card3", card3 }, { "card4", card4 } };
+            var result = await Database.Base.Read("*", "cards", new() { { "id", card1 }, { "username", username } });
+            if (result == null)
+                return false;
+            result = await Database.Base.Read("*", "cards", new() { { "id", card2 }, { "username", username } });
+            if (result == null)
+                return false;
+            result = await Database.Base.Read("*", "cards", new() { { "id", card3 }, { "username", username } });
+            if (result == null)
+                return false;
+            result = await Database.Base.Read("*", "cards", new() { { "id", card4 }, { "username", username } });
+            if (result == null)
+                return false;
             bool success = await Database.Base.Update("decks",  data, new() { { "username", username } });
             if (!success)
                 return false;

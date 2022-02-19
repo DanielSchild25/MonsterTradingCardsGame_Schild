@@ -10,7 +10,6 @@ namespace MonsterTradingCardsGame.Server
     internal class Server
     {
         Dictionary<HttpRequest.METHODS, Dictionary<string, Func<HttpRequest, HttpResponse, Handler>>> handler = new();
-
         public async Task Start()
         {
             RegisterHandlers();
@@ -63,5 +62,6 @@ namespace MonsterTradingCardsGame.Server
             RegisterHandler<Handlers.PUT.Users>(HttpRequest.METHODS.PUT, "users");
             RegisterHandler<Handlers.POST.Battles>(HttpRequest.METHODS.POST, "battles");
         }
+                
     }
 }

@@ -9,8 +9,6 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
 {
     class Battles : Handler
     {
-        public string player1 = null;
-        public string player2 = null;
         public Battles(HttpResponse response, HttpRequest request) : base(response, request)
         {
 
@@ -21,23 +19,24 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             User? user = Authentication();
             if (user == null)
                 return;
-            AddPlayer(user.username);
 
-            if (player1 != null && player2 != null)
+            var result = await Database.Base.Read("*", "battle");
+
+            if(result == null)
             {
-                string result = await BattleLogic.Battle(player1, player2);
+                bool success = await Database.Base.Write("battle", new() { { "player", user.username } });
+                response.status = HttpResponse.STATUS.OK;
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Player is waiting for apponent!" } };
+            }
+            else
+            {
+                string BattleResult = await BattleLogic.Battle((string)result["player0"], user.username);
+                bool success = await Database.Base.Delete("battle");
+                response.status = HttpResponse.STATUS.OK;
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", BattleResult } };
             }
 
-
-
         }
 
-        public void AddPlayer(string username)
-        {
-            if (player1 == null && player2 == null)
-                player1 = username;
-            else if (player2 == null)
-                player2 = username;
-        }
     }
 }

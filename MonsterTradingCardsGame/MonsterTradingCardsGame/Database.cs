@@ -183,6 +183,22 @@ namespace MonsterTradingCardsGame
             return true;
         }
 
+        public async Task<bool> Delete(string table)
+        {
+            string stringCommand = $"DELETE FROM {table};";
+            using var sqlCommand = new NpgsqlCommand(stringCommand);
+            sqlCommand.Connection = db;
+            try
+            {
+                await sqlCommand.ExecuteNonQueryAsync();
+                Console.WriteLine(stringCommand);
+            }
+            catch (System.Data.Common.DbException ex)
+            {
+                return false;
+            }
+            return true;
+        }
         ~Database()
         {
             db.Close();
