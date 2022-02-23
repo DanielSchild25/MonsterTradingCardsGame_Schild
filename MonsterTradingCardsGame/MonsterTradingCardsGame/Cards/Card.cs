@@ -11,7 +11,7 @@ namespace MonsterTradingCardsGame.Cards
     public enum CardType { Monster, Spell }
 
     public enum CardGroup { Goblin, Dragon, Wizzard, Orks, Knights, Kraken, FireElves, Normal }
-    class Card
+    public class Card
     {
 
         public string name;
@@ -43,7 +43,7 @@ namespace MonsterTradingCardsGame.Cards
             return card;
         }
 
-        private  static Card Build(string id, string name, float damage)
+        public  static Card Build(string id, string name, float damage)
         {
             Card card = new(id, name, damage);
 
@@ -124,19 +124,5 @@ namespace MonsterTradingCardsGame.Cards
             return true;
         }
 
-        /*private static void RegisterCard<T>(string name) where T : Card
-        {
-            if (cards.ContainKey(name))
-                return;
-
-            cards[name] = (string id, string name, float damage) =>
-            {
-                Card? card = (T?)Activator.CreateInstance(typeof(T), new object[] { id, name, damage });
-                if (card == null)
-                    throw new NullReferenceException("Something went wrong, unable to create card!");
-                return card;
-            };
-
-        }*/
     }
 }

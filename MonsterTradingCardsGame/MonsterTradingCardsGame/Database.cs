@@ -9,7 +9,7 @@ namespace MonsterTradingCardsGame
 {
 
     using Dict = Dictionary<string, object>;
-    class Database
+    public class Database
     {
 
         readonly NpgsqlConnection db;
@@ -183,11 +183,46 @@ namespace MonsterTradingCardsGame
             return true;
         }
 
-        public async Task<bool> Delete(string table)
+        public async Task<bool> Delete(string table, Dict restrictions = null)
         {
-            string stringCommand = $"DELETE FROM {table};";
-            using var sqlCommand = new NpgsqlCommand(stringCommand);
+            string stringCommand = $"DELETE FROM {table} ";
+
+            if (restrictions != null)
+            {
+                string[] keys = restrictions.Keys.ToArray();
+
+                if (restrictions.ContainsValue("NULL"))
+                {
+                    for (int i = 0; i < keys.Length; i++)
+                    {
+                        keys[i] = $"{keys[i]} is NULL";
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < keys.Length; i++)
+                    {
+                        keys[i] = $"{keys[i]}=@{keys[i]}";
+                    }
+                }
+
+
+                if (restrictions.Count > 0)
+                {
+                    stringCommand += "WHERE " + string.Join(" AND ", keys);
+                }
+            }
+
+            using var sqlCommand = new NpgsqlCommand(stringCommand + ";");
             sqlCommand.Connection = db;
+
+            if (restrictions != null)
+            {
+                foreach (string key in restrictions.Keys)
+                {
+                    sqlCommand.Parameters.AddWithValue(key, restrictions[key]);
+                }
+            }
             try
             {
                 await sqlCommand.ExecuteNonQueryAsync();

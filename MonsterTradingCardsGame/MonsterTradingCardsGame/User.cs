@@ -8,11 +8,10 @@ using Npgsql;
 
 namespace MonsterTradingCardsGame
 {
-    class User
+    public class User
     {
         public readonly string username;
         List<Card> stack;
-        public List<Card> deck;
         int coins;
         int elo;
         DateTime sessionStart;
@@ -32,7 +31,6 @@ namespace MonsterTradingCardsGame
             this.username = username;
             coins = 20;
             stack = new ();
-            deck = new();
             elo = 1000;
             sessionStart = DateTime.Now;
             token = Guid.NewGuid().ToString();
