@@ -208,18 +208,24 @@ namespace MonsterTradingCardsGame
 
                 if (LastIndex1 < 0)
                 {
+                    await User.BattleWin(player2);
+                    await User.BattleLose(player1);
                     Console.WriteLine("Player 2 Wins! Match END!");
                     return "Player 2 Wins! Match END!";
                 }
 
                 if (LastIndex2 < 0)
                 {
+                    await User.BattleWin(player1);
+                    await User.BattleLose(player2);
                     Console.WriteLine("Player 1 Wins! Match END!");
                     return "Player 1 Wins! Match END!";
                 }
 
                 if (round > 100)
                 {
+                    await User.BattleDraw(player1);
+                    await User.BattleDraw(player2);
                     Console.WriteLine("Round Limit reached! Match END!");
                     return "Round Limit reached! Match END!";
                 }

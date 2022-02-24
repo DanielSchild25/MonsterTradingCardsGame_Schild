@@ -65,6 +65,7 @@ namespace MonsterTradingCardsGame
         public static async Task<User?> Register(string username, string password)
         {
             bool success = await Database.Base.Write("users", new() { { "username", username }, { "password", password } ,{ "coins", 20 } });
+            await Database.Base.Write("stats", new() { { "username", username }, { "elo", 100 }, { "wins", 0 }, { "loses", 0 }, { "draws", 0 } });
             if (!success)
                 return null;
             return new User(username);
@@ -82,6 +83,55 @@ namespace MonsterTradingCardsGame
             bool success = await Database.Base.Update("users", new() { { "name", name}, { "bio", bio}, { "image", image} }, new() { { "username", username }});
 
             return success;
+        }
+
+        public static async Task<bool> BattleWin(string username)
+        {
+            Dictionary<string, object> result = await Database.Base.Read("*", "stats", new() { { "username", username } });
+
+            int elo = (int)result["elo0"];
+            int wins = (int)result["wins0"];
+
+            bool success = await Database.Base.Update("stats", new() { { "elo", elo + 3 }, { "wins", wins + 1 } }, new() { { "username", username } });
+
+            return success;
+        }
+
+        public static async Task<bool> BattleLose(string username)
+        {
+            Dictionary<string, object> result = await Database.Base.Read("*", "stats", new() { { "username", username } });
+
+            int elo = (int)result["elo0"];
+            int loses = (int)result["loses0"];
+
+            bool success = await Database.Base.Update("stats", new() { { "elo", elo - 5 }, { "loses", loses + 1 } }, new() { { "username", username } });
+
+            return success;
+        }
+
+        public static async Task<bool> BattleDraw(string username)
+        {
+            Dictionary<string, object> result = await Database.Base.Read("*", "stats", new() { { "username", username } });
+
+            int draws = (int)result["draws0"];
+
+            bool success = await Database.Base.Update("stats", new() { { "draws", draws + 1 } }, new() { { "username", username } });
+
+            return success;
+        }
+
+        public static async Task<Dictionary<string, object>> GetStats(string username)
+        {
+            Dictionary<string, object> result = await Database.Base.Read("*", "stats", new() { { "username", username } });
+
+            return result;
+        }
+
+        public static async Task<Dictionary<string, object>> GetScoreboard()
+        {
+            Dictionary<string, object> result = await Database.Base.Read("*", "stats", null, false,  "elo");
+
+            return result;
         }
     }
 }

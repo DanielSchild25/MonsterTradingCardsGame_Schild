@@ -37,7 +37,7 @@ namespace MonsterTradingCardsGame
             Console.WriteLine("Connect successful!");
         }
 
-        public async Task<Dict?> Read(string toRead, string table, Dict? restrictions = null, bool random = false)
+        public async Task<Dict?> Read(string toRead, string table, Dict? restrictions = null, bool random = false, string order = null)
         {
             Dict result = new();
             string stringCommand = $"SELECT {toRead} FROM {table} ";
@@ -70,6 +70,11 @@ namespace MonsterTradingCardsGame
 
             if (random)
                 stringCommand += " ORDER BY RANDOM() LIMIT 1";
+
+            if(order != null)
+            {
+                stringCommand += " ORDER BY " + order + " DESC";
+            }
 
                 using var sqlCommand = new NpgsqlCommand(stringCommand + ";");
             sqlCommand.Connection = db;
