@@ -57,14 +57,14 @@ namespace MonsterTradingCardsGame
         public async static Task<User?> Login(string username, string password)
         {
             var user = await Database.Base.Read("*", "users", new() { { "username", username } });
-            if(user == null || (password != (string)user["password0"]))
+            if(user == null || (Hash.Hash_SHA1(password) != (string)user["password0"]))
                 return null;
             return new User(username);
         }
 
         public static async Task<User?> Register(string username, string password)
         {
-            bool success = await Database.Base.Write("users", new() { { "username", username }, { "password", password } ,{ "coins", 20 } });
+            bool success = await Database.Base.Write("users", new() { { "username", username }, { "password", Hash.Hash_SHA1(password) } ,{ "coins", 20 } });
             await Database.Base.Write("stats", new() { { "username", username }, { "elo", 100 }, { "wins", 0 }, { "loses", 0 }, { "draws", 0 } });
             if (!success)
                 return null;
