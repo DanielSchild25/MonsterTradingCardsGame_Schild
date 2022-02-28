@@ -1,0 +1,35 @@
+Unit Test decisions:
+
+Für die Unit Tests wurden alle wichtige Funktionen, die für das User Management und auch für alle Karten Operationen notwendig sind getestet.
+Darin inbegriffen sind auch sämtliche Datenbankoperationen.
+
+Tracked Time:
+
+04.12.2021: 5h
+05.12.2021: 5h
+06.12.2021: 5h
+17.12.2021: 4h
+03.01.2022: 2h
+04.01.2022: 2h
+06.01.2022: 3h
+07.01.2022: 2h
+08.01.2022: 3h
+10.01.2022: 1h
+26.01.2022: 3h
+27.01.2022: 3h
+01.02.2022: 4h
+02.02.2022: 3h
+14.02.2022: 3h
+15.02.2022: 2h
+16.02.2022: 5h
+17.02.2022: 4h
+19.02.2022: 3h
+23.02.2022: 4h
+24.02.2022: 3h
+25.02.2022: 1h
+--------------
+Gesamt:     70h
+
+Lick to GitHub:
+
+https://github.com/DanielSchild25/MonsterTradingCardsGame_Schild
