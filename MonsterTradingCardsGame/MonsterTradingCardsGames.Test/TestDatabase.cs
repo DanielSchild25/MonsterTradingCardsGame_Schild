@@ -27,6 +27,21 @@ namespace MonsterTradingCardsGames.Test
         }
 
         [Test]
+        public async Task TestReadOrder()
+        {
+            await Card.Create("test-ID1", "TestCard", 10);
+            await Card.Create("test-ID2", "TestCard", 20);
+
+            var result = await Database.Base.Read("*", "cards", new() { { "name", "TestCard" } }, false, "damage");
+
+            await Database.Base.Delete("cards", new() { { "id", "test-ID1" } });
+            await Database.Base.Delete("cards", new() { { "id", "test-ID2" } });
+
+            Assert.IsTrue((string)result["id0"] == "test-ID2");
+        }
+
+
+        [Test]
         public async Task TestUpdate()
         {
             await Card.Create("test-ID", "TestCard", 10);

@@ -26,7 +26,7 @@ namespace MonsterTradingCardsGame.Server.Handlers.POST
             {
                 bool success = await Database.Base.Write("battle", new() { { "player", user.username } });
                 response.status = HttpResponse.STATUS.OK;
-                response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", "Player is waiting for apponent!" } };
+                response.Message = new() { { "status", (int)HttpResponse.STATUS.OK }, { "message", $"{user.username} is waiting for apponent!" } };
             }
             else
             {

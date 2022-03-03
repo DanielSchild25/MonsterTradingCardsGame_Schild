@@ -203,5 +203,7 @@ namespace MonsterTradingCardsGames.Test
 
             Assert.IsTrue(result == 501);
         }
+
+        
     }
 }

@@ -108,7 +108,7 @@ namespace MonsterTradingCardsGame
             while (true)
             {
                 Random RandomCardIndex = new();
-
+                
                 //Card Last = Player1.deck.Last();
                 //int LastIndex1 = Player1.deck.LastIndexOf(Last);
                 Console.WriteLine(LastIndex1);
@@ -126,7 +126,17 @@ namespace MonsterTradingCardsGame
                 float P1Dmg = Player1Card.damage;
                 float P2Dmg = Player2Card.damage;
 
-                
+                //unique feature 
+                Random DmgChange = new();
+                float Change1 = DmgChange.Next(75, 125);
+                Change1 /= 100;
+                P1Dmg *= Change1;
+
+                float Change2 = DmgChange.Next(75, 125);
+                Change2 /= 100;
+                P2Dmg *= Change2;
+
+
                 if (Player1Card.CType == CardType.Spell)
                 {
                     if (Player1Card.EType == ElementType.Water && Player2Card.EType == ElementType.Fire)
@@ -210,16 +220,16 @@ namespace MonsterTradingCardsGame
                 {
                     await User.BattleWin(player2);
                     await User.BattleLose(player1);
-                    Console.WriteLine("Player 2 Wins! Match END!");
-                    return "Player 2 Wins! Match END!";
+                    Console.WriteLine($"{player2} Wins! Match END!");
+                    return $"{player2} Wins! Match END!";
                 }
 
                 if (LastIndex2 < 0)
                 {
                     await User.BattleWin(player1);
                     await User.BattleLose(player2);
-                    Console.WriteLine("Player 1 Wins! Match END!");
-                    return "Player 1 Wins! Match END!";
+                    Console.WriteLine($"{player1} Wins! Match END!");
+                    return $"{player1} Wins! Match END!";
                 }
 
                 if (round > 100)

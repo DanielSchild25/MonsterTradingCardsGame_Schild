@@ -1,7 +1,12 @@
 Unit Test decisions:
 
-Für die Unit Tests wurden alle wichtige Funktionen, die für das User Management und auch für alle Karten Operationen notwendig sind getestet.
+Für die Unit Tests wurden alle wichtige Funktionen, die für das User Management und auch für alle Karten Operationen notwendig sind gewählt und somit getestet.
 Darin inbegriffen sind auch sämtliche Datenbankoperationen.
+
+unique featur:
+
+Damit es seltener vorkommt, dass 2 Karten den selben damage haben wird dieser Wert immer random +/- 25% gerechnet am Beginn jeder Runden.
+Damit wird auch das Balancing ein bisschen angepasst, indem schächere Karten mehr Chancen haben.
 
 Tracked Time:
 
